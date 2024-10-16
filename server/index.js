@@ -20,9 +20,23 @@ const io = new Server(expressServer, {
 
 io.on('connection', (socket) =>{
     console.log(`User ${socket.id} connected`)
+
+    socket.emit('message','Welcom to Chat App');
+
+    socket.broadcast.emit('message',`User ${socket.id.substring(0,5)} connected`);
+
     socket.on('message', data => {
         console.log(data);
         io.emit('message', `${socket.id.substring(0,5)}: ${data}`)
+    });
+
+    // socket.on('disconnect', ()=> {
+    //     console.log(`User ${socket.id.substring(0,5)} disconnected`);
+    //     socket.broadcast.emit('message',`User ${socket.id.substring(0,5)} disconnected`)
+    // })
+
+    socket.on('activity', (name) =>{
+        socket.broadcast.emit('activity',name)
     })
 })
 
