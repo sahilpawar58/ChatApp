@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormEvent, useRef, useState, useEffect } from 'react';
+import './App.css';
+import { io } from "socket.io-client";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [socket, setSocket] = useState<any>(null);
+  const input = useRef<HTMLInputElement | null>(null);
+  const messages = useRef<HTMLUListElement | null>(null);
+
+  // Initialize the socket connection once when the component mounts
+  useEffect(() => {
+    const newSocket = io('ws://localhost:3000');
+    setSocket(newSocket);
+
+    // Set up the 'message' event listener once
+    newSocket.on("message", (data: string) => {
+      if (messages.current) {
+        const li = document.createElement('li');
+        li.textContent = data;
+        messages.current.appendChild(li);
+      }
+    });
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  function sendMessage(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (input.current && socket) {
+      socket.emit('message', input.current.value); // Emit 'message' event with the input value
+      input.current.value = ''; // Clear input after sending message
+    }
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <form onSubmit={sendMessage}>
+        <input ref={input} type="text" placeholder="Your message" />
+        <button type="submit">Send</button>
+      </form>
+      <ul ref={messages}></ul>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

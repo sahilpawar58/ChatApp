@@ -1,14 +1,23 @@
-import ws from "ws";
+import {WebSocketServer} from "ws";
+import { Server } from "socket.io";
+import { createServer } from "http";
 import express from "express";
 
-const app = express();
+const httpServer = createServer();
 
-const wss = new ws.Server({ port: 8080 })
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*"
+    }
+})
 
-wss.on('connection', (socket) =>{
-    socket.on('message', message => {
-        console.log(message)
-        socket.send(`${message}`)
+
+io.on('connection', (socket) =>{
+    console.log(`User ${socket.id} connected`)
+    socket.on('message', data => {
+        console.log(data);
+        io.emit('message', `${socket.id.substring(0,5)}: ${data}`)
     })
 })
 
+httpServer.listen(3000, ()=> console.log('listening on 3000'))
