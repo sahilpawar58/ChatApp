@@ -4,12 +4,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+     "start": "dotenvx run -- node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.19.3",
     "express": "^4.21.1",
     "http": "^0.0.1-security",
     "socket.io": "^4.8.0",

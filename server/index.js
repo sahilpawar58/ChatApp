@@ -3,9 +3,15 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import express from "express";
 
-const httpServer = createServer();
+const PORT = process.env.PORT || 8080;
 
-const io = new Server(httpServer, {
+const app = express();
+
+const expressServer = app.listen(PORT, ()=>{
+    console.log('listing on port '+PORT)
+})
+
+const io = new Server(expressServer, {
     cors: {
         origin: "*"
     }
@@ -20,4 +26,3 @@ io.on('connection', (socket) =>{
     })
 })
 
-httpServer.listen(3000, ()=> console.log('listening on 3000'))
