@@ -1,12 +1,14 @@
 import { FormEvent, useRef, useState, useEffect } from 'react';
 import './App.css';
 import { io } from "socket.io-client";
+import { AnonymousForm } from './AnonymousForm/AnonymousForm';
 
 function App() {
   const [socket, setSocket] = useState<any>(null);
   const input = useRef<HTMLInputElement | null>(null);
   const messages = useRef<HTMLUListElement | null>(null);
   const activity = useRef<HTMLParagraphElement | null>(null);
+  const isLoggedIn = useState(false);
   let activityTimer: NodeJS.Timeout | null = null;
   
 
@@ -64,6 +66,7 @@ function App() {
 
   return (
     <>
+    {isLoggedIn?(<><AnonymousForm /></>):(<></>)}
       <form onSubmit={sendMessage}>
         <input ref={input} type="text" placeholder="Your message" onKeyDown={handleKeyPress}/>
         <button type="submit">Send</button>

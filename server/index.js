@@ -2,14 +2,25 @@ import {WebSocketServer} from "ws";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import express from "express";
+import { User } from "./models/user.schema.js";
+import "./services/mongoConnect.js";
+import cors from "cors";
+import userRouter from "./routes/user.routes.js"
 
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 
+app.use(cors());
+app.use(express.json());
+
+app.use('/api',userRouter);
+
 const expressServer = app.listen(PORT, ()=>{
     console.log('listing on port '+PORT)
 })
+
+
 
 const io = new Server(expressServer, {
     cors: {

@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-     "start": "dotenvx run -- node index.js",
+    "start": "dotenvx run -- nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,8 +12,10 @@
   "description": "",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.19.3",
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "http": "^0.0.1-security",
+    "mongoose": "^8.7.1",
     "socket.io": "^4.8.0",
     "ws": "^8.18.0"
   }
