@@ -5,7 +5,8 @@ import express from "express";
 import { User } from "./models/user.schema.js";
 import "./services/mongoConnect.js";
 import cors from "cors";
-import userRouter from "./routes/user.routes.js"
+import userRouter from "./routes/user.routes.js";
+import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 8080;
 
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
 
 app.use('/api',userRouter);
 
