@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser())
 
-app.use('/api',userRouter);
+app.use('/api/user',userRouter);
 
 const expressServer = app.listen(PORT, ()=>{
     console.log('listing on port '+PORT)
