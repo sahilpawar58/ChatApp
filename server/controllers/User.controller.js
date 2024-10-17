@@ -31,6 +31,32 @@ const createUser = async(req, res) =>{
     }
 }
 
+const loginUser = async(req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return ApiResponse(res, 403, "Invalid Request");
+    }
+    try{
+       User.findOne({username})
+       .then((doc)=>{
+        if(doc){
+            const cookie = setUser({username:doc.username,password:doc.password});
+            res.cookie("accessToken",cookie)
+            return ApiResponse(res, 200, "Successfull",null,doc);
+        }else{
+            return ApiResponse(res, 403, null,"Invalid Username or password");
+        }
+       })
+       .catch(()=>{
+        return ApiResponse(res, 500, null,"Server error "+err);
+       })
+    }catch(err){
+        return ApiResponse(res, 500,null, "Server error "+err);
+    }
+
+}
+
 const signinUser = async(req, res) => {
     const {accessToken} = req.cookies;
 
@@ -52,7 +78,8 @@ const signinUser = async(req, res) => {
 }
 const userController = {
     createUser,
-    signinUser
+    signinUser,
+    loginUser
 }
 
 export default userController
